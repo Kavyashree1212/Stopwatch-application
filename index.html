@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Task 02 - Stopwatch Web App</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #050d1e, #000000);
+      color: white;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .slide {
+      background: radial-gradient(circle at top left, rgba(0, 255, 255, 0.1), rgba(128, 0, 255, 0.05));
+      border-radius: 20px;
+      padding: 40px;
+      width: 90%;
+      max-width: 1200px;
+      position: relative;
+      box-shadow: 0 0 40px rgba(0, 255, 255, 0.1);
+    }
+
+    .task-header {
+      border: 2px solid red;
+      display: inline-block;
+      padding: 10px 20px;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 40px;
+    }
+
+    .content {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 40px;
+    }
+
+    .left {
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .icon {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #00ffff, #8000ff);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .icon svg {
+      width: 30px;
+      height: 30px;
+      fill: white;
+    }
+
+    .task-title {
+      font-size: 22px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: white;
+    }
+
+    .right {
+      flex: 2;
+      min-width: 300px;
+      font-size: 16px;
+      line-height: 1.6;
+      color: white;
+    }
+
+    .footer {
+      position: absolute;
+      bottom: 20px;
+      left: 40px;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .dots {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .dots span {
+      width: 8px;
+      height: 8px;
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+    }
+
+    .circle-decor {
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 255, 255, 0.1), transparent);
+      top: -50px;
+      left: -50px;
+    }
+
+    .stopwatch {
+      margin-top: 30px;
+    }
+
+    .timer-display {
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      letter-spacing: 2px;
+    }
+
+    .controls button {
+      background: #1a1a1a;
+      color: white;
+      border: 1px solid #444;
+      border-radius: 6px;
+      padding: 10px 20px;
+      margin-right: 10px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .controls button:hover {
+      background: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <div class="task-header">TASK 02</div>
+    
+    <div class="content">
+      <div class="left">
+        <div class="icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M15 1H9v2h6V1zm-3 4C7.48 5 4 8.48 4 13s3.48 8 8 8 8-3.48 8-8-3.48-8-8-8zm1 13h-2v-6h2v6z"/>
+          </svg>
+        </div>
+        <div class="task-title">STOPWATCH WEB APPLICATION</div>
+        <div class="stopwatch">
+          <div class="timer-display" id="timer">00:00:00</div>
+          <div class="controls">
+            <button onclick="startStopwatch()">Start</button>
+            <button onclick="pauseStopwatch()">Pause</button>
+            <button onclick="resetStopwatch()">Reset</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="right">
+        Unleash precision with an elegant stopwatch built for the modern web. This intuitive application empowers users to track time effortlessly start, pause, reset, and capture lap times with pinpoint accuracy. Whether it's for workouts, coding sprints, or everyday tasks, experience smooth performance and sleek design wrapped into one interactive tool.
+      </div>
+    </div>
+
+    <div class="footer">SkillCraft Technology</div>
+
+    <div class="dots">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <div class="circle-decor"></div>
+  </div>
+
+  <script>
+    let timerInterval;
+    let elapsed = 0;
+    let running = false;
+
+    function updateDisplay() {
+      const timer = document.getElementById('timer');
+      let hrs = Math.floor(elapsed / 3600);
+      let mins = Math.floor((elapsed % 3600) / 60);
+      let secs = elapsed % 60;
+
+      timer.textContent =
+        String(hrs).padStart(2, '0') + ':' +
+        String(mins).padStart(2, '0') + ':' +
+        String(secs).padStart(2, '0');
+    }
+
+    function startStopwatch() {
+      if (!running) {
+        running = true;
+        timerInterval = setInterval(() => {
+          elapsed++;
+          updateDisplay();
+        }, 1000);
+      }
+    }
+
+    function pauseStopwatch() {
+      running = false;
+      clearInterval(timerInterval);
+    }
+
+    function resetStopwatch() {
+      running = false;
+      clearInterval(timerInterval);
+      elapsed = 0;
+      updateDisplay();
+    }
+
+    updateDisplay(); // Initial call
+  </script>
+</body>
+</html>
